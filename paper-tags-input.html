@@ -78,7 +78,6 @@ If you want to save it in bower.json file, remember to add flag --save
     <div class="clearfix" id="tags-items">
     <template is="dom-repeat" items="{{tags}}">
       <tag-item font-color="{{fontColor}}" tag-color="{{tagColor}}" size="{{size}}" tags="{{tags}}" enable-remove="{{enableRemove}}" index="{{index}}" value="{{item}}"></tag-item>
-      </div>
     </template>
     </div>
      <template is="dom-if" if="{{enableAdd}}">
@@ -227,12 +226,18 @@ If you want to save it in bower.json file, remember to add flag --save
      * @param {object} event object
      */
     _focusOut: function(e) {
-      var tag = this._getInputVal();
-      if (typeof(tag) != undefined && tag != ""){
-        this._addTag(this._getInputVal());
-        this.input_value = "";
+        var tag = this._getInputVal();
+        if (typeof(tag) != undefined && tag != ""){
+            if (this.tags.indexOf(this._getInputVal()) >= 0){
+              var input = Polymer.dom(this.root).querySelector('#tag-input');;
+              input.errorMessage = this.duplicateErrorMessage;
+              input.invalid=true;
+            }
+            else{
+              this._addTag(this._getInputVal());
+              this.input_value = "";
+            }
       }
-
     },
     /**
      * _keyDown is fired when user enters a key in the input
